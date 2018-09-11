@@ -71,7 +71,7 @@ public class MovementParkour extends Movement {
         if (!MovementHelper.fullyPassable(src.up(2))) {
             return null;
         }
-        for (int i = 2; i <= 4; i++) {
+        for (int i = 2; i <= 5; i++) {
             BlockPos dest = src.offset(dir, i);
             // TODO perhaps dest.up(3) doesn't need to be fullyPassable, just canWalkThrough, possibly?
             for (int y = 0; y < 4; y++) {
@@ -94,6 +94,8 @@ public class MovementParkour extends Movement {
                 return WALK_ONE_BLOCK_COST * 3;
             case 4:
                 return SPRINT_ONE_BLOCK_COST * 4;
+            case 5:
+                return SPRINT_ONE_BLOCK_COST * 5;
         }
         throw new IllegalStateException("LOL");
     }
@@ -107,7 +109,7 @@ public class MovementParkour extends Movement {
         if (MovementHelper.avoidWalkingInto(BlockStateInterface.get(src.down().offset(direction)).getBlock())) {
             return COST_INF;
         }
-        for (int i = 1; i <= 4; i++) {
+        for (int i = 1; i <= 5; i++) {
             BlockPos d = src.offset(direction, i);
             for (int y = 0; y < 4; y++) {
                 if (!MovementHelper.fullyPassable(d.up(y))) {
