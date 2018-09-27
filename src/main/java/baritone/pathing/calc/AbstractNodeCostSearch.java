@@ -17,11 +17,10 @@
 
 package baritone.pathing.calc;
 
-import baritone.Baritone;
 import baritone.api.pathing.goals.Goal;
 import baritone.pathing.path.IPath;
 import baritone.utils.pathing.BetterBlockPos;
-import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
+import baritone.utils.pathing.Long2PathNodeOpenHashMap;
 import net.minecraft.util.math.BlockPos;
 
 import java.util.Optional;
@@ -45,7 +44,9 @@ public abstract class AbstractNodeCostSearch implements IPathFinder {
     /**
      * @see <a href="https://github.com/cabaletta/baritone/issues/107">Issue #107</a>
      */
-    private final Long2ObjectOpenHashMap<PathNode> map;
+    //private final Long2ObjectOpenHashMap<PathNode> map;
+
+    private final Long2PathNodeOpenHashMap map2;
 
     protected PathNode startNode;
 
@@ -72,7 +73,8 @@ public abstract class AbstractNodeCostSearch implements IPathFinder {
     AbstractNodeCostSearch(BlockPos start, Goal goal) {
         this.start = new BetterBlockPos(start.getX(), start.getY(), start.getZ());
         this.goal = goal;
-        this.map = new Long2ObjectOpenHashMap<>(Baritone.settings().pathingMapDefaultSize.value, Baritone.settings().pathingMapLoadFactor.get());
+        //this.map = new Long2ObjectOpenHashMap<>(Baritone.settings().pathingMapDefaultSize.value, Baritone.settings().pathingMapLoadFactor.get());
+        this.map2 = new Long2PathNodeOpenHashMap();
     }
 
     public void cancel() {
@@ -130,12 +132,7 @@ public abstract class AbstractNodeCostSearch implements IPathFinder {
      * @see <a href="https://github.com/cabaletta/baritone/issues/107">Issue #107</a>
      */
     protected PathNode getNodeAtPosition(int x, int y, int z, long hashCode) {
-        PathNode node = map.get(hashCode);
-        if (node == null) {
-            node = new PathNode(x, y, z, goal);
-            map.put(hashCode, node);
-        }
-        return node;
+        return map2.getOrCreate(hashCode, x, y, z, goal);
     }
 
     public static long posHash(int x, int y, int z) {
@@ -184,7 +181,7 @@ public abstract class AbstractNodeCostSearch implements IPathFinder {
     }
 
     protected int mapSize() {
-        return map.size();
+        return map2.size();
     }
 
     @Override
