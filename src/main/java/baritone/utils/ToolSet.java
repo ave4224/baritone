@@ -49,7 +49,6 @@ public class ToolSet implements Helper {
     private final Function<Block, Double> backendCalculation;
 
     public ToolSet() {
-        super();
         breakStrengthCache = new HashMap<>();
 
         if (Baritone.settings().considerPotionEffects.get()) {
@@ -95,13 +94,13 @@ public class ToolSet implements Helper {
      */
     public byte getBestSlot(Block b) {
         byte best = 0;
-        double value = -1;
-        int materialCost = -2;
+        double value = Double.NEGATIVE_INFINITY;
+        int materialCost = Integer.MIN_VALUE;
         IBlockState blockState = b.getDefaultState();
         for (byte i = 0; i < 9; i++) {
             ItemStack itemStack = player().inventory.getStackInSlot(i);
             double v = calculateStrVsBlock(itemStack, blockState);
-            if (v > value || value == -1) {
+            if (v > value) {
                 value = v;
                 best = i;
                 materialCost = getMaterialCost(itemStack);
