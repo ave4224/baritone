@@ -62,7 +62,8 @@ public final class PathingBehavior extends Behavior implements IPathingBehavior,
 
     private final LinkedBlockingQueue<PathEvent> toDispatch = new LinkedBlockingQueue<>();
 
-    private PathingBehavior() {}
+    private PathingBehavior() {
+    }
 
     private void queuePathEvent(PathEvent event) {
         toDispatch.add(event);
@@ -422,11 +423,11 @@ public final class PathingBehavior extends Behavior implements IPathingBehavior,
         } else {
             timeout = Baritone.settings().planAheadTimeoutMS.<Long>get();
         }
-        Optional<HashSet<Long>> favoredPositions;
+        HashSet<Long> favoredPositions;
         if (Baritone.settings().backtrackCostFavoringCoefficient.get() == 1D) {
-            favoredPositions = Optional.empty();
+            favoredPositions = null;
         } else {
-            favoredPositions = previous.map(IPath::positions).map(Collection::stream).map(x -> x.map(BetterBlockPos::longHash)).map(x -> x.collect(Collectors.toList())).map(HashSet::new); // <-- okay this is EPIC
+            favoredPositions = previous.map(IPath::positions).map(Collection::stream).map(x -> x.map(BetterBlockPos::longHash)).map(x -> x.collect(Collectors.toList())).map(HashSet::new).orElse(null); // <-- okay this is EPIC
         }
         try {
             IPathFinder pf = new AStarPathFinder(start.getX(), start.getY(), start.getZ(), goal, favoredPositions);

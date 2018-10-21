@@ -197,7 +197,7 @@ public interface MovementHelper extends ActionCosts, Helper {
     }
 
     static boolean isGatePassable(BlockPos gatePos, BlockPos playerPos) {
-        if (playerPos.equals(gatePos)) {
+        if (!playerPos.equals(gatePos)) {
             return false;
         }
 
@@ -295,10 +295,7 @@ public interface MovementHelper extends ActionCosts, Helper {
             }
             return true;
         }
-        if (block instanceof BlockStairs) {
-            return true;
-        }
-        return false;
+        return block instanceof BlockStairs;
     }
 
     static boolean canWalkOn(BetterBlockPos pos, IBlockState state) {

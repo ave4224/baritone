@@ -53,7 +53,8 @@ public final class MineBehavior extends Behavior implements IMineBehavior, Helpe
     private List<BlockPos> locationsCache;
     private int quantity;
 
-    private MineBehavior() {}
+    private MineBehavior() {
+    }
 
     @Override
     public void onTick(TickEvent event) {
@@ -110,7 +111,7 @@ public final class MineBehavior extends Behavior implements IMineBehavior, Helpe
         locationsCache = locs;
     }
 
-    public Goal coalesce(BlockPos loc, List<BlockPos> locs) {
+    private Goal coalesce(BlockPos loc, List<BlockPos> locs) {
         if (!Baritone.settings().forceInternalMining.get()) {
             return new GoalTwoBlocks(loc);
         }
@@ -132,7 +133,7 @@ public final class MineBehavior extends Behavior implements IMineBehavior, Helpe
         }
     }
 
-    public GoalComposite coalesce(List<BlockPos> locs) {
+    private GoalComposite coalesce(List<BlockPos> locs) {
         return new GoalComposite(locs.stream().map(loc -> coalesce(loc, locs)).toArray(Goal[]::new));
     }
 
@@ -159,7 +160,7 @@ public final class MineBehavior extends Behavior implements IMineBehavior, Helpe
         return prune(locs, mining, max);
     }
 
-    public List<BlockPos> prune(List<BlockPos> locs, List<Block> mining, int max) {
+    private List<BlockPos> prune(List<BlockPos> locs, List<Block> mining, int max) {
         BlockPos playerFeet = MineBehavior.INSTANCE.playerFeet();
         locs.sort(Comparator.comparingDouble(playerFeet::distanceSq));
 

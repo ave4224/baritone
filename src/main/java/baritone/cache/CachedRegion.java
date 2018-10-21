@@ -95,9 +95,7 @@ public final class CachedRegion implements ICachedRegion {
                 if (locs == null) {
                     continue;
                 }
-                for (BlockPos pos : locs) {
-                    res.add(pos);
-                }
+                res.addAll(locs);
             }
         }
         return res;
@@ -214,7 +212,7 @@ public final class CachedRegion implements ICachedRegion {
                 }
                 boolean[][] present = new boolean[32][32];
                 BitSet[][] bitSets = new BitSet[32][32];
-                Map<String, List<BlockPos>>[][] location = new Map[32][32];
+                Map<String, List<BlockPos>>[][] location = (Map<String, List<BlockPos>>[][]) new Map[32][32];
                 IBlockState[][][] overview = new IBlockState[32][32][];
                 long[][] cacheTimestamp = new long[32][32];
                 for (int x = 0; x < 32; x++) {

@@ -326,10 +326,7 @@ public class PathExecutor implements IPathExecutor, Helper {
             // when we're midair in the middle of a fall, we're very far from both the beginning and the end, but we aren't actually off path
             if (path.movements().get(pathPosition) instanceof MovementFall) {
                 BlockPos fallDest = path.positions().get(pathPosition + 1); // .get(pathPosition) is the block we fell off of
-                if (VecUtils.entityFlatDistanceToCenter(player(), fallDest) < leniency) { // ignore Y by using flat distance
-                    return false;
-                }
-                return true;
+                return VecUtils.entityFlatDistanceToCenter(player(), fallDest) >= leniency; // ignore Y by using flat distance
             } else {
                 return true;
             }
@@ -371,7 +368,7 @@ public class PathExecutor implements IPathExecutor, Helper {
         // we'll take it from here, no need for minecraft to see we're holding down control and sprint for us
         Baritone.INSTANCE.getInputOverrideHandler().setInputForceState(InputOverrideHandler.Input.SPRINT, false);
 
-        // however, descend doesn't request sprinting, beceause it doesn't know the context of what movement comes after it
+        // however, descend doesn't request sprinting, because it doesn't know the context of what movement comes after it
         IMovement current = path.movements().get(pathPosition);
         if (current instanceof MovementDescend && pathPosition < path.length() - 2) {
 
@@ -426,7 +423,7 @@ public class PathExecutor implements IPathExecutor, Helper {
         player().setSprinting(false);
     }
 
-    private static boolean canSprintInto(IMovement current, IMovement next) {
+    private static boolean canSprintInto(IMovement current, IMovement next) { // TODO: Move this into IMovement
         if (next instanceof MovementDescend) {
             if (next.getDirection().equals(current.getDirection())) {
                 return true;
@@ -437,10 +434,7 @@ public class PathExecutor implements IPathExecutor, Helper {
                 return true;
             }
         }
-        if (next instanceof MovementDiagonal && Baritone.settings().allowOvershootDiagonalDescend.get()) {
-            return true;
-        }
-        return false;
+        return next instanceof MovementDiagonal && Baritone.settings().allowOvershootDiagonalDescend.get();
     }
 
     private void onChangeInPathPosition() {

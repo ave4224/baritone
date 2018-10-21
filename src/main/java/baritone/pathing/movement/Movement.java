@@ -65,9 +65,9 @@ public abstract class Movement implements IMovement, Helper, MovementHelper {
 
     private Double cost;
 
-    public List<BlockPos> toBreakCached = null;
-    public List<BlockPos> toPlaceCached = null;
-    public List<BlockPos> toWalkIntoCached = null;
+    protected List<BlockPos> toBreakCached = null;
+    protected List<BlockPos> toPlaceCached = null;
+    protected List<BlockPos> toWalkIntoCached = null;
 
     private Boolean calculatedWhileLoaded;
 
@@ -195,7 +195,6 @@ public abstract class Movement implements IMovement, Helper, MovementHelper {
             // There's a block or blocks that we can't walk through, but we have no target rotation to reach any
             // So don't return true, actually set state to unreachable
             state.setStatus(MovementStatus.UNREACHABLE);
-            return true;
         }
         return true;
     }

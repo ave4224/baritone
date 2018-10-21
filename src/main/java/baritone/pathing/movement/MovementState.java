@@ -79,6 +79,7 @@ public class MovementState {
          * Necessary movement to achieve
          * <p>
          * TODO: Decide desiredMovement type
+         * TODO: Is there a reason this isn't final?
          */
         public Vec3d position;
 

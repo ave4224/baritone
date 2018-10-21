@@ -77,7 +77,7 @@ public class ExampleBaritoneControl extends Behavior implements Helper {
         }
     }
 
-    public boolean runCommand(String msg) {
+    private boolean runCommand(String msg) {
         msg = msg.toLowerCase(Locale.US).trim();
         List<Settings.Setting<Boolean>> toggleable = Baritone.settings().getAllValuesByType(Boolean.class);
         for (Settings.Setting<Boolean> setting : toggleable) {
@@ -298,7 +298,8 @@ public class ExampleBaritoneControl extends Behavior implements Helper {
                 MineBehavior.INSTANCE.mine(quantity, block);
                 logDirect("Will mine " + quantity + " " + blockTypes[0]);
                 return true;
-            } catch (NumberFormatException | ArrayIndexOutOfBoundsException | NullPointerException ex) {}
+            } catch (NumberFormatException | ArrayIndexOutOfBoundsException | NullPointerException ex) {
+            }
             for (String s : blockTypes) {
                 if (ChunkPacker.stringToBlock(s) == null) {
                     logDirect(s + " isn't a valid block name");

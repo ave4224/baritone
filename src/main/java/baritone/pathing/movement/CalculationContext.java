@@ -74,23 +74,13 @@ public class CalculationContext implements Helper {
     }
 
     public boolean canPlaceThrowawayAt(int x, int y, int z) {
-        if (!hasThrowaway()) { // only true if allowPlace is true, see constructor
-            return false;
-        }
-        if (isPossiblyProtected(x, y, z)) {
-            return false;
-        }
-        return worldBorder.canPlaceAt(x, z); // TODO perhaps MovementHelper.canPlaceAgainst could also use this?
+        // only true if allowPlace is true, see constructor
+        // TODO perhaps MovementHelper.canPlaceAgainst could also use this?
+        return hasThrowaway() && !isPossiblyProtected(x, y, z) && worldBorder.canPlaceAt(x, z);
     }
 
     public boolean canBreakAt(int x, int y, int z) {
-        if (!allowBreak()) {
-            return false;
-        }
-        if (isPossiblyProtected(x, y, z)) {
-            return false;
-        }
-        return true;
+        return allowBreak() && !isPossiblyProtected(x, y, z);
     }
 
     public boolean isPossiblyProtected(int x, int y, int z) {

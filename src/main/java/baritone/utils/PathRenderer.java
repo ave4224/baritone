@@ -58,7 +58,8 @@ public final class PathRenderer implements Helper {
     private static final Tessellator TESSELLATOR = Tessellator.getInstance();
     private static final BufferBuilder BUFFER = TESSELLATOR.getBuffer();
 
-    private PathRenderer() {}
+    private PathRenderer() {
+    }
 
     public static void render(RenderEvent event, PathingBehavior behavior) {
         // System.out.println("Render passing");

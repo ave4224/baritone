@@ -47,7 +47,7 @@ public final class PathNode {
     public double cost;
 
     /**
-     * Should always be equal to estimatedCosttoGoal + cost
+     * Should always be equal to estimatedCostToGoal + cost
      * Mutable and changed by PathFinder
      */
     public double combinedCost;

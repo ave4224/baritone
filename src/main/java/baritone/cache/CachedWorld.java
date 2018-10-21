@@ -47,7 +47,7 @@ public final class CachedWorld implements ICachedWorld, Helper {
     /**
      * A map of all of the cached regions.
      */
-    private Long2ObjectMap<CachedRegion> cachedRegions = new Long2ObjectOpenHashMap<>();
+    private final Long2ObjectMap<CachedRegion> cachedRegions = new Long2ObjectOpenHashMap<>();
 
     /**
      * The directory that the cached region files are saved to
@@ -120,8 +120,7 @@ public final class CachedWorld implements ICachedWorld, Helper {
                     int regionZ = zoff + playerRegionZ;
                     CachedRegion region = getOrCreateRegion(regionX, regionZ);
                     if (region != null) {
-                        // TODO: 100% verify if this or addAll is faster.
-                        region.getLocationsOf(block).forEach(res::add);
+                        res.addAll(region.getLocationsOf(block));
                     }
                 }
             }

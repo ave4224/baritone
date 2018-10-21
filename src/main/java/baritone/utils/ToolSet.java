@@ -42,7 +42,7 @@ public class ToolSet implements Helper {
      * A cache mapping a {@link Block} to how long it will take to break
      * with this toolset, given the optimum tool is used.
      */
-    private Map<Block, Double> breakStrengthCache = new HashMap<>();
+    private final Map<Block, Double> breakStrengthCache = new HashMap<>();
 
     /**
      * My buddy leijurv owned me so we have this to not create a new lambda instance.
