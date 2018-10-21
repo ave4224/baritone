@@ -348,6 +348,7 @@ public class PathExecutor implements IPathExecutor, Helper {
         return true;
     }
 
+    // TODO: Make this use a helper to discover if sprinting is good then do it if it is
     private void sprintIfRequested() {
 
         // first and foremost, if allowSprint is off, or if we don't have enough hunger, don't try and sprint
