@@ -37,17 +37,29 @@ import java.util.function.Function;
  * @author Avery, Brady, leijurv
  */
 public class ToolSet implements Helper {
-
     /**
      * A cache mapping a {@link Block} to how long it will take to break
      * with this toolset, given the optimum tool is used.
      */
-    private Map<Block, Double> breakStrengthCache = new HashMap<>();
+    private final Map<Block, Double> breakStrengthCache;
 
     /**
      * My buddy leijurv owned me so we have this to not create a new lambda instance.
      */
-    private final Function<Block, Double> backendCalculation = this::getBestDestructionTime;
+    private final Function<Block, Double> backendCalculation;
+
+    public ToolSet() {
+        super();
+        breakStrengthCache = new HashMap<>();
+
+        if (Baritone.settings().considerPotionEffects.get()) {
+            double amplifier = potionAmplifier();
+            Function<Double, Double> amplify = x -> amplifier * x;
+            backendCalculation = amplify.compose(this::getBestDestructionTime);
+        } else {
+            backendCalculation = this::getBestDestructionTime;
+        }
+    }
 
     /**
      * Using the best tool on the hotbar, how long would it take to mine this block
@@ -56,18 +68,18 @@ public class ToolSet implements Helper {
      * @return how long it would take in ticks
      */
     public double getStrVsBlock(IBlockState state) {
-        return breakStrengthCache.computeIfAbsent(state.getBlock(), backendCalculation) * potionAmplifier();
+        return breakStrengthCache.computeIfAbsent(state.getBlock(), backendCalculation);
     }
 
     /**
      * Evaluate the material cost of a possible tool. The priority matches the
      * listed order in the Item.ToolMaterial enum.
      *
-     * @param itemStack a possibly null ItemStack
+     * @param itemStack a possibly empty ItemStack
      * @return values range from -1 to 4
      */
     private int getMaterialCost(ItemStack itemStack) {
-        if (itemStack != null && itemStack.getItem() instanceof ItemTool) {
+        if (itemStack.getItem() instanceof ItemTool) {
             ItemTool tool = (ItemTool) itemStack.getItem();
             return ToolMaterial.valueOf(tool.getToolMaterialName()).ordinal();
         } else {
@@ -111,7 +123,7 @@ public class ToolSet implements Helper {
      * @param b the blockstate to be mined
      * @return A double containing the destruction ticks with the best tool
      */
-    public Double getBestDestructionTime(Block b) {
+    private double getBestDestructionTime(Block b) {
         ItemStack stack = player().inventory.getStackInSlot(getBestSlot(b));
         return calculateStrVsBlock(stack, b.getDefaultState());
     }
@@ -120,7 +132,7 @@ public class ToolSet implements Helper {
      * Calculates how long would it take to mine the specified block given the best tool
      * in this toolset is used. A negative value is returned if the specified block is unbreakable.
      *
-     * @param item the blockstate to be mined
+     * @param state the blockstate to be mined
      * @return how long it would take in ticks
      */
     private double calculateStrVsBlock(ItemStack item, IBlockState state) {
@@ -147,32 +159,29 @@ public class ToolSet implements Helper {
     }
 
     /**
-     * Calculates any modifier to breaking time based on status effects. When the considerPotionEffects
-     * flag in the Baritone settings is disabled, 1 will always be returned.
+     * Calculates any modifier to breaking time based on status effects.
      *
-     * @return a double to scale block breaking time.
+     * @return a double to scale block breaking speed.
      */
     private double potionAmplifier() {
         double speed = 1;
-        if (Baritone.settings().considerPotionEffects.get()) {
-            if (player().isPotionActive(MobEffects.HASTE)) {
-                speed *= 1.2 + player().getActivePotionEffect(MobEffects.HASTE).getAmplifier() * 0.2;
-            }
-            if (player().isPotionActive(MobEffects.MINING_FATIGUE)) {
-                switch (player().getActivePotionEffect(MobEffects.MINING_FATIGUE).getAmplifier()) {
-                    case 0:
-                        speed *= 0.3;
-                        break;
-                    case 1:
-                        speed *= 0.09;
-                        break;
-                    case 2:
-                        speed *= 0.0027;
-                        break;
-                    default:
-                        speed *= 0.00081;
-                        break;
-                }
+        if (player().isPotionActive(MobEffects.HASTE)) {
+            speed *= 1 + (player().getActivePotionEffect(MobEffects.HASTE).getAmplifier() + 1) * 0.2;
+        }
+        if (player().isPotionActive(MobEffects.MINING_FATIGUE)) {
+            switch (player().getActivePotionEffect(MobEffects.MINING_FATIGUE).getAmplifier()) {
+                case 0:
+                    speed *= 0.3;
+                    break;
+                case 1:
+                    speed *= 0.09;
+                    break;
+                case 2:
+                    speed *= 0.0027;
+                    break;
+                default:
+                    speed *= 0.00081;
+                    break;
             }
         }
         return speed;
