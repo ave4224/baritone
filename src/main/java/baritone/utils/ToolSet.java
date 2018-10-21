@@ -93,7 +93,7 @@ public class ToolSet implements Helper {
                 value = v;
                 best = i;
                 materialCost = getMaterialCost(itemStack);
-            } else if (Math.abs(v - value) < 0.00001) {
+            } else if (v == value) {
                 int c = getMaterialCost(itemStack);
                 if (c < materialCost) {
                     value = v;
