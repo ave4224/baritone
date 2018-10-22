@@ -94,7 +94,7 @@ public interface Helper {
     }
 
     /**
-     * Send a message to chat regardless of chatDebug (should only be used for critically important messages, or as a direct response to a chat command)
+     * Send a message to chat regardless of chatDebug (should only be used for critically important messages, or as a direct response to a chat chat)
      *
      * @param message
      */

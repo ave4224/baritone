@@ -352,7 +352,7 @@ public class Settings {
     public Setting<Boolean> pathThroughCachedOnly = new Setting<>(false);
 
     /**
-     * Whether or not to use the "#" command prefix
+     * Whether or not to use the "#" chat prefix
      */
     public Setting<Boolean> prefix = new Setting<>(false);
 
@@ -392,7 +392,7 @@ public class Settings {
     public Setting<Boolean> cancelOnGoalInvalidation = new Setting<>(false);
 
     /**
-     * The "axis" command (aka GoalAxis) will go to a axis, or diagonal axis, at this Y level.
+     * The "axis" chat (aka GoalAxis) will go to a axis, or diagonal axis, at this Y level.
      */
     public Setting<Integer> axisHeight = new Setting<>(120);
 

@@ -18,6 +18,7 @@
 package baritone.pathing.movement;
 
 import baritone.Baritone;
+import baritone.api.pathing.movement.ActionCosts;
 import baritone.api.pathing.movement.IMovement;
 import baritone.api.pathing.movement.MovementStatus;
 import baritone.api.utils.BetterBlockPos;
@@ -313,5 +314,16 @@ public abstract class Movement implements IMovement, Helper, MovementHelper {
             toWalkIntoCached = new ArrayList<>();
         }
         return toWalkIntoCached;
+    }
+
+    @Override
+    public String toString(){
+        String[] parts = this.getClass().toString().split("\\.");
+        double cost = this.getCost();
+        String strCost = cost + "";
+        if (cost >= ActionCosts.COST_INF) {
+            strCost = "IMPOSSIBLE";
+        }
+        return (parts[parts.length - 1] + " " + this.getDest().getX() + "," + this.getDest().getY() + "," + this.getDest().getZ() + " " + strCost);
     }
 }
